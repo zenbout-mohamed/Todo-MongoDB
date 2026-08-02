@@ -1,33 +1,80 @@
-function TodoItem({ todo, onToggle, onDelete }) {
+import { useState } from "react";
+
+function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(todo.title);
+
+
+  const handleUpdate = () => {
+
+    if (!newTitle.trim()) return;
+
+    onUpdate(todo._id, {
+      title: newTitle
+    });
+
+    setIsEditing(false);
+  };
+
+
   return (
-    <li
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: "10px",
-      }}
-    >
-      <div>
-        <input
-          type="checkbox"
-          checked={todo.completed}
-          onChange={() => onToggle(todo)}
-        />
+    <li>
 
-        <span
-          style={{
-            marginLeft: "10px",
-            textDecoration: todo.completed ? "line-through" : "none",
-          }}
-        >
-          {todo.title}
-        </span>
-      </div>
+      {isEditing ? (
 
-      <button onClick={() => onDelete(todo._id)}>
-        Supprimer
-      </button>
+        <div>
+          <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+          />
+
+          <button onClick={handleUpdate}>
+            Enregistrer
+          </button>
+
+        </div>
+
+      ) : (
+
+        <div>
+
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={() => onToggle(todo)}
+          />
+
+
+          <span
+            style={{
+              textDecoration: todo.completed
+                ? "line-through"
+                : "none"
+            }}
+          >
+            {todo.title}
+          </span>
+
+
+          <button
+            onClick={() => setIsEditing(true)}
+          >
+            ✏️ Modifier
+          </button>
+
+
+          <button
+            onClick={() => onDelete(todo._id)}
+          >
+            🗑️ Supprimer
+          </button>
+
+        </div>
+
+      )}
+
     </li>
   );
 }

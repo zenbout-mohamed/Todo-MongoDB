@@ -46,6 +46,25 @@ function App() {
       console.error("Erreur lors de la modification :", error);
     }
   };
+  // Editer une tâche
+  const editTodo = async (id, data) => {
+
+    try {
+
+      await updateTodo(id, data);
+
+      loadTodos();
+
+    } catch (error) {
+
+      console.error(
+        "Erreur modification :",
+        error
+      );
+
+    }
+
+  };
 
   // Supprimer une tâche
   const removeTodo = async (id) => {
@@ -67,6 +86,7 @@ function App() {
         todos={todos}
         onToggle={toggleTodo}
         onDelete={removeTodo}
+        onUpdate={editTodo}
       />
     </div>
   );
