@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
+import TodoStats from "./components/TodoStats";
 
 import { getTodos, createTodo, updateTodo, deleteTodo,} from "./services/todoService";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [search, setSearch] = useState("");
 
   // Charger les tâches au démarrage
   useEffect(() => {
@@ -76,20 +78,63 @@ function App() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">Ma Todo List</h1>
+  const filteredTodos = todos.filter((todo) =>
+  todo.title
+    .toLowerCase()
+    .includes(search.toLowerCase())
+  );
+
+ return (
+  <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+
+    <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8">
+
+
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
+        📝 Todo List
+      </h1>
+
+
+      <TodoStats todos={todos} />
+
+
+      <input
+        type="text"
+        placeholder="🔍 Rechercher une tâche..."
+
+        value={search}
+
+        onChange={(e) => setSearch(e.target.value)}
+
+        className="
+          w-full
+          mb-5
+          border
+          rounded-xl
+          px-4
+          py-3
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+        "
+      />
+
 
       <TodoForm onAddTodo={addTodo} />
 
+
       <TodoList
-        todos={todos}
+        todos={filteredTodos}
         onToggle={toggleTodo}
         onDelete={removeTodo}
         onUpdate={editTodo}
       />
+
+
     </div>
-  );
+
+  </div>
+);
 }
 
 export default App;
